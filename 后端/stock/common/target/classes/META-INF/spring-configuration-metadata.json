@@ -1,0 +1,56 @@
+{
+  "groups": [
+    {
+      "name": "stock.jwt",
+      "type": "com.stock.properties.JwtProperties",
+      "sourceType": "com.stock.properties.JwtProperties"
+    },
+    {
+      "name": "stock.pool",
+      "type": "com.stock.properties.PoolProperties",
+      "sourceType": "com.stock.properties.PoolProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "stock.jwt.admin-secret-key",
+      "type": "java.lang.String",
+      "description": "管理端员工生成jwt令牌相关配置",
+      "sourceType": "com.stock.properties.JwtProperties"
+    },
+    {
+      "name": "stock.jwt.admin-token-name",
+      "type": "java.lang.String",
+      "sourceType": "com.stock.properties.JwtProperties"
+    },
+    {
+      "name": "stock.jwt.admin-ttl",
+      "type": "java.lang.Long",
+      "sourceType": "com.stock.properties.JwtProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "stock.jwt.user-secret-key",
+      "type": "java.lang.String",
+      "description": "用户端微信用户生成jwt令牌相关配置",
+      "sourceType": "com.stock.properties.JwtProperties"
+    },
+    {
+      "name": "stock.jwt.user-token-name",
+      "type": "java.lang.String",
+      "sourceType": "com.stock.properties.JwtProperties"
+    },
+    {
+      "name": "stock.jwt.user-ttl",
+      "type": "java.lang.Long",
+      "sourceType": "com.stock.properties.JwtProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "stock.pool.thread-num",
+      "type": "java.lang.Integer",
+      "sourceType": "com.stock.properties.PoolProperties"
+    }
+  ],
+  "hints": []
+}

@@ -1,0 +1,58 @@
+server:
+  port: 8080
+#  servlet:
+#    session:
+#      timeout: 120000
+spring:
+#  mvc:
+#    async:
+#      request-timeout: 50000
+
+
+  profiles:
+    active: dev
+  main:
+    allow-circular-references: true
+  datasource:
+    druid:
+      driver-class-name: ${stock.datasource.driver-class-name}
+      url: jdbc:mysql://${stock.datasource.host}:${stock.datasource.port}/${stock.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${stock.datasource.username}
+      password: ${stock.datasource.password}
+      initial-size: 20          # 初始化连接数
+      min-idle: 20              # 最小空闲连接数
+      max-active: 40           # 最大连接数（也称 maxPoolSize）
+#  redis:
+#    host: ${stock.redis.host}
+#    port: ${stock.redis.port}
+#    password: ${stock.redis.password}
+#    database: ${stock.redis.database}
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.stock.entity
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    root: info
+#    com:
+#      stock:
+#        mapper: debug
+#        service: info
+#        controller: info
+
+stock:
+  jwt:
+    #管理端
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: ghw
+    # 设置jwt过期时间
+    admin-ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: Authorization
+  pool:
+    thread-num: 100
+
