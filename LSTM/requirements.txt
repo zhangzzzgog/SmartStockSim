@@ -1,0 +1,8 @@
+argparse
+pandas
+tensorflow
+numpy
+sklearn
+keras
+datetime
+matplotlib
