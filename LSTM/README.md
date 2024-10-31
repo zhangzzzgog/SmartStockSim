@@ -3,8 +3,20 @@ Our module offers 2 kinds of LSTM model for long term(a month) and short term(30
 Predicted prices are close prices.
 ## Quick Start
 To run the python scripts, an envirorment with pyhton 3.8 is required. 
-Then install packages:
+You can use conda to manage environments, install miniconda:
 ```
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+~/miniconda3/bin/conda init bash
+~/miniconda3/bin/conda init zsh
+```
+Reboot the terminal, then use conda to create a new envirorment:
+```
+conda create --name lstm_predict python=3.8
+conda activate lstm_predict
+cd LSTM
 pip install -r requirements.txt
 ```
 
