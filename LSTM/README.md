@@ -22,7 +22,7 @@ pip install -r requirements.txt
 
 You can train with default dataset simply by running:
 ```
-python parserlong.py --stock_name 430017
+python lstm.py 
 ```
 LSTM model is saved in tensorflow format.
 
