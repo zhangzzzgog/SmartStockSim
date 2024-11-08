@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from "vue-router"
+import { Message } from 'element-ui';
+import store from '@/store/index.js';
 
 Vue.use(VueRouter)
 
@@ -11,6 +13,14 @@ const router = new VueRouter({
             path:"/",
             name:"home",
             component:() => import("@/views/home.vue"),
+        },
+        {
+            path:'/stock/:id',
+            name:"stock",
+            component:() => import("@/views/stock.vue"),
+            meta:{
+                requiresAuth: true
+            },
         },
         {
             path:"/news",
@@ -26,8 +36,32 @@ const router = new VueRouter({
             path:"/user",
             name:"user",
             component:() => import("@/views/user.vue"),
+            meta:{
+                requiresAuth: true
+            }
         },
     ]
+})
+
+router.beforeEach((to, from, next) => {
+    if(to.matched.some(record => record.meta.requiresAuth)){
+        if(!store.state.isLogged){
+            Message({
+                message: 'Please log in',
+                type: 'warning',
+            });
+            next({
+                path:'/login',
+                query: { redirect: to.fullPath },
+            });
+        }
+        else{
+            next();
+        }
+    }
+    else{
+        next();
+    }
 })
 
 const originalPush = VueRouter.prototype.push;

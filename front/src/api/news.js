@@ -9,7 +9,7 @@ export function newsList(){
 
 export function newsInfo(newsId){
     return request({
-        url: '/news' + newsId,
+        url: '/news/' + newsId,
         method: 'GET',
     })
 }

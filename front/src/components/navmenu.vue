@@ -4,16 +4,29 @@
              :default-active="this.$route.path"
              mode="horizontal"
              style="font-weight: bold; font-size: 20px;"
+             class="nav-menu"
              >
+      <el-col span="24" style="margin-top: 10px; display: flex; justify-content: center; font-weight: normal; font-size: 16px;">
+        <div class="current-time">{{ currentTime.replace(/\//g, '-') }}</div>
+        <div>
+        <span
+            :style="{ color: marketStatusColor }"
+            @click="showMarketTime"
+            style="cursor: pointer;"
+        >
+          市场状态: {{ marketStatus }}
+        </span>
+        </div>
+      </el-col>
       <el-col span="8" style="display: flex; justify-content: flex-start; align-items: center; ">
         <el-menu-item index="/" style="margin-left: 2vw">home</el-menu-item>
         <el-menu-item index="/news">news</el-menu-item>
       </el-col>
-      <el-col span="8" style="display: flex; justify-content: center; ">
+      <el-col span="8" style="display: flex; justify-content: center; "  >
         <div>
-          <img src="../assets/logo.svg" alt="logo" style="padding-top: 12px; color: #409EFF">
+          <img  @click="goHome" class="stock-name-link" src="../assets/logo.svg" alt="logo" style="padding-top: 12px; color: #409EFF">
         </div>
-        <span style="padding-top: 14px; padding-left: 10px; display: flex">SmartStockSim</span>
+        <span style="padding-top: 14px; padding-left: 10px; display: flex"  class="stock-name-link" @click="goHome">SmartStockSim</span>
       </el-col>
       <el-col span="8" style="display: flex; justify-content: flex-end; ">
         <div class="button-container">
@@ -47,6 +60,7 @@
           </button>
         </div>
       </el-col>
+
     </el-menu>
   </el-row>
 </template>
@@ -56,10 +70,32 @@ export default {
   name: "navMenu",
   data(){
     return{
-
+      currentTime: ''
     }
   },
+  created() {
+    this.$store.dispatch('loadUser');
+    this.updateTime(); // 立即更新一次时间
+    setInterval(this.updateTime, 1000); // 每秒更新
+  },
   methods:{
+    goHome() {
+      this.$router.push({ path: `/` });
+    },
+    showMarketTime() {
+      if (this.marketStatus === "开市") {
+        this.$message({
+          message: '开市时间范围: 上午9:35到11:30，下午1:05到3:00',
+          type: 'success'
+        });
+      } else {
+        this.$message({
+          message: '开市时间范围: 上午9:35到11:30，下午1:05到3:00',
+          type: 'info'
+        });
+      }
+    }
+,
     logout(){
       if(confirm("Are you sure you want to logout?")){
         this.$store.commit('logout');
@@ -70,6 +106,36 @@ export default {
     },
     goUser(){
       this.$router.push('/user')
+    },
+    updateTime() {
+      const now = new Date();
+      this.currentTime = now.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+      console.log("Current Time:", this.currentTime); // 调试输出
+    },
+  }
+
+,
+  computed: {
+    marketStatus() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const currentTime = hours * 60 + minutes;
+
+      const marketOpenMorning = 9 * 60 + 35;
+      const marketCloseMorning = 11 * 60 + 30;
+      const marketOpenAfternoon = 13 * 60 + 5;
+      const marketCloseAfternoon = 15 * 60;
+
+      if ((currentTime >= marketOpenMorning && currentTime <= marketCloseMorning) ||
+          (currentTime >= marketOpenAfternoon && currentTime < marketCloseAfternoon)) {
+        return "上市";
+      } else {
+        return "休市";
+      }
+    },
+    marketStatusColor() {
+      return this.marketStatus === "上市" ? "red" : "blue";
     }
   }
 }
@@ -77,6 +143,14 @@ export default {
 
 
 <style scoped>
+.nav-menu{
+  position: fixed; /* 固定位置 */
+  top: 0; /* 距离顶部 0 */
+  left: 0; /* 距离左边 0 */
+  z-index: 1000; /* 确保菜单在最上层 */
+  width: 100%; /* 宽度占满屏幕 */
+}
+
 .el-dropdown-menu__item, .el-menu-item{
   padding: 0 30px;
 }
@@ -175,5 +249,13 @@ export default {
 /* button click effect*/
 .Btn:active {
   transform: translate(2px ,2px);
+}
+.stock-name-link {
+  color: #409EFF;
+  cursor: pointer;
+}
+
+.current-time{
+  margin-right: 20px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div class="news-card">
       <h3>{{ article.title }}</h3>
-      <p>{{ article.description }}</p>
+<!--      <p>{{ article.description }}</p>-->
       <small>{{ article.publishedAt }}</small> <br/>
       <!-- <button @click="viewDetails">查看详情</button> -->
       <el-collapse>
@@ -11,7 +11,7 @@
       </el-collapse>
     </div>
   </template>
-  
+
   <script>
   export default {
     props: {
@@ -24,7 +24,7 @@
     }
   }
   </script>
-  
+
   <style scoped>
   .news-card {
     border: 1px solid #ddd;
@@ -35,4 +35,3 @@
     max-width: 400px;
   }
   </style>
-  

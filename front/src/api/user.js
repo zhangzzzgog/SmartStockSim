@@ -9,7 +9,7 @@ export function userInfo(){
 
 export function userStockInfo(stockId){
     return request({
-        url: '/stocks/user/info' + stockId,
+        url: '/stocks/user/info/' + stockId,
         method: 'GET',
     })
 }
@@ -23,7 +23,7 @@ export function userTradeHistory(){
 
 export function userStockTradeHistory(stockId){
     return request({
-        url: '/stocks/history' + stockId,
+        url: '/stocks/history/' + stockId,
         method: 'GET',
     })
 }

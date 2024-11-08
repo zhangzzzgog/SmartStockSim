@@ -8,17 +8,32 @@
         <path d="M2 3h10v2H2V3zm0 3h4v3H2V6zm0 4h4v1H2v-1zm0 2h4v1H2v-1zm5-6h2v1H7V6zm3 0h2v1h-2V6zM7 8h2v1H7V8zm3 0h2v1h-2V8zm-3 2h2v1H7v-1zm3 0h2v1h-2v-1zm-3 2h2v1H7v-1zm3 0h2v1h-2v-1z"/>
       </svg>
     </el-divider>
+
+    <!-- 条件搜索 -->
+    <div class="search-container" >
+      <el-input @current-change="handleCurrentChange" placeholder="输入新闻标题" v-model="title" style="width: 250px; margin-right: 40px;"></el-input>
+      <el-date-picker @current-change="handleCurrentChange" v-model="startDate" type="date" placeholder="开始日期" style="margin-right: 40px;"></el-date-picker>
+      <el-date-picker @current-change="handleCurrentChange" v-model="endDate" type="date" placeholder="结束日期" style="margin-right: 20px;"></el-date-picker>
+      <el-button type="primary"  @click="searchNews">搜索</el-button>
+    </div>
+
     <div class="news-div">
-      <span v-for="article in articles" :key="article.title">
+      <span v-for="article in paginatedArticles" :key="article.title">
         <news-card :article="article"></news-card>
       </span>
-      <news-card :article="article" style="visibility: hidden;"></news-card>
-      <news-card :article="article" style="visibility: hidden;"></news-card>
-      <news-card :article="article" style="visibility: hidden;"></news-card>
-      <news-card :article="article" style="visibility: hidden;"></news-card>
-      <news-card :article="article" style="visibility: hidden;"></news-card>
+    </div>
+
+    <div class="pagination-container">
+      <el-pagination
+          :current-page="currentPage"
+          :page-size="pageSize"
+          :total="filteredArticles.length"
+          @current-change="handleCurrentChange"
+          layout="total, prev, pager, next"
+      />
     </div>
   </div>
+
 </template>
 
 <script>
@@ -30,49 +45,81 @@ export default {
   name: "newsPage",
   components: {
     'nav-menu': navMenu,
-    'news-card': newsCard, 
+    'news-card': newsCard,
   },
   data() {
     return {
-      articles: [{
-        title: 'new1',
-        description: '123456789',
-        publishedAt: '1234-56-78',
-        detail:'xijie'
-      }, {
-        title: 'new2',
-        description: '123456789',
-        publishedAt: '1234-56-78',
-        detail:'xijie'
-      }, {
-        title: 'news3',
-        description: '123456789',
-        publishedAt: '1234-56-78',
-        detail:'xijie'
-      }],
+      articles: [],
+      filteredArticles: [],
+      startDate: localStorage.getItem('startDate')&&localStorage.getItem('startDate')!=='null' ? new Date(localStorage.getItem('startDate')) : null,
+      endDate: localStorage.getItem('endDate')&&localStorage.getItem('endDate')!=='null' ? new Date(localStorage.getItem('endDate')) : null,
+      title: localStorage.getItem('title')&&localStorage.getItem('title')!=='null'? localStorage.getItem('title') :null,
+      currentPage: localStorage.getItem('currentPage')&&localStorage.getItem('currentPage')!=='null'?Number(localStorage.getItem('currentPage')):1 ,
+      pageSize: 9,
     }
   },
   created() {
-    this.getNewsList();
+    this.searchNews();
   },
   methods: {
-    getNewsList(){
-      newsList().then(res => {
+    getNewsList() {
+      return newsList().then(res => {
         this.articles = res.data.news;
-      })
+        this.filteredArticles = this.articles; // 初始化时将所有文章存储
+      });
+    },
+    searchNews() {
+      this.getNewsList().then(() => {
+        this.filteredArticles = this.articles.filter(article => {
+          const articleDate = new Date(article.publishedAt);
+          const isInDateRange = (!this.startDate || articleDate >= new Date(this.startDate)) &&
+              (!this.endDate || articleDate <= new Date(this.endDate));
+          const isTitleMatch = this.title ? article.title.includes(this.title) : true;
+          return isInDateRange && isTitleMatch;
+        });
+        this.saveSearchParams();
+
+      });
+    },
+    handleCurrentChange(page) {
+      this.currentPage = page;
+      this.saveSearchParams();
+    },
+    saveSearchParams() {
+      localStorage.setItem('startDate', this.startDate ? this.startDate.toISOString() : null);
+      localStorage.setItem('endDate', this.endDate ? this.endDate.toISOString() : null);
+      localStorage.setItem('title', this.title);
+      localStorage.setItem('currentPage', this.currentPage);
+    }
+  },
+
+  computed: {
+    paginatedArticles() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      return this.filteredArticles.slice(start, start + this.pageSize);
     }
   }
 }
 </script>
 
-
 <style scoped>
 .news-div {
-  display: flex; 
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
-.el-divider{
+
+.search-container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* 和新闻保持间距 */
+}
+.el-divider {
   background-color: #89c4fd;
   height: 1.2px;
   width: 80%;

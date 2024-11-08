@@ -1,9 +1,13 @@
 import request from "@/utils/request";
 
-export function stockList(){
+export function stockList(params){
     return request({
         url: '/stocks',
-        method: 'GET',
+        method: 'post',
+        data: params,
+        headers: {
+            'Content-Type': 'application/json'
+        }
     })
 }
 

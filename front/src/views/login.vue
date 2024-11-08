@@ -96,6 +96,7 @@ export default {
               this.$router.push({ path: this.redirect || "/" });
             }).catch((err) => {
               console.log(err);
+              this.$message.error("invalid username or password");
             });
       }
       else{

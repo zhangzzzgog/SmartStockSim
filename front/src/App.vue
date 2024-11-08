@@ -22,5 +22,6 @@ export default {
 }*/
 body {
   font-family: 'Manrope';
+  padding-top: 80px;
 }
 </style>

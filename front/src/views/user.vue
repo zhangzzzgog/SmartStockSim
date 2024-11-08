@@ -14,15 +14,23 @@
             <!-- 持仓信息 -->
             <div class="stock-holdings">
                 <h2>持仓信息</h2>
-                <el-table :data="account.tradeInfo">
+                <el-table :data="account.tradeInfo" class="stock-name-link" @row-click="goDetail">
                     <el-table-column prop="stockName" label="股票名称"></el-table-column>
                     <el-table-column prop="quantity" label="当前持仓量"></el-table-column>
-                    <el-table-column prop="price" label="当前价格"></el-table-column>
-                    <el-table-column label="盈亏">
+                  <el-table-column prop="price" label="当前价格"></el-table-column>
+                  <el-table-column label="总市值">
+                    <template slot-scope="scope">
+                      {{ (scope.row.price * scope.row.quantity).toFixed(2) }} 元
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="cost" label="总投入"></el-table-column>
+                  <el-table-column prop="earn" label="获利"></el-table-column>
+
+                    <el-table-column label="总盈亏">
                         <template slot-scope="scope">
                             <!-- 根据盈亏动态设置样式 -->
                             <span :class="priceClass(scope.row.profit)">
-                                {{ scope.row.profit }} 元
+                                {{ (scope.row.profit).toFixed(2) }} 元
                             </span>
                         </template>
                     </el-table-column>
@@ -179,6 +187,9 @@ export default {
                 this.account = response.data;
             })
         },
+      goDetail(row) {
+        this.$router.push({ path: `/stock/${row.stockId}` });
+      },
         // getUser() { //获取用戶简要信息
         //     user().then(response => {
         //         this.account = response.data;
@@ -199,8 +210,14 @@ export default {
     flex-wrap: wrap;
     padding: 20px;
     justify-content: center;
-}
 
+}
+.el-table th {
+  border-bottom: none !important;
+}
+.el-table .cell {
+  text-decoration: none !important;
+}
 .account-overview {
     background-color: #f0f0f0;
     padding: 16px;
@@ -230,5 +247,9 @@ export default {
 .price-up {
     color: red;
     /* 当 changePercent 是正数时，价格显示红色 */
+}
+.stock-name-link {
+  color: #409EFF;
+  cursor: pointer;
 }
 </style>
