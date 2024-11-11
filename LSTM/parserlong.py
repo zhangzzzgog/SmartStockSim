@@ -1,4 +1,4 @@
-from LSTM_long.lstmlong import LSTM_LongModel
+from LSTM_long.lstmlong_time import LSTM_LongModel
 import argparse
 
 parser = argparse.ArgumentParser(description='Long term LSTM model training and predict')

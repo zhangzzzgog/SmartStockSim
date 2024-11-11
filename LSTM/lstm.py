@@ -86,6 +86,10 @@ class LSTM_LongModel:
 
             X_test, y_test = data_split(testing_set_scaled, n_timestamp)
             X_test = X_test.reshape(X_test.shape[0], X_test.shape[1], 1)
+            
+            # 计算样本权重，越靠后的数据权重越高
+            time_weights = np.arange(1, len(X_train) + 1)
+            time_weights = time_weights / time_weights.sum()  # 归一化，使权重和为1
 
             # 构建 LSTM 模型
             model = Sequential()
@@ -94,7 +98,7 @@ class LSTM_LongModel:
 
             # 编译模型
             model.compile(optimizer='adam', loss='mean_squared_error')
-            model.fit(X_train, y_train, batch_size=64, epochs=n_epochs, validation_data=(X_test, y_test))
+            model.fit(X_train, y_train, batch_size=64, epochs=n_epochs, validation_data=(X_test, y_test), sample_weight=time_weights)
 
             # 预测未来数据
             all_data = np.concatenate((training_set_scaled, testing_set_scaled), axis=0)
