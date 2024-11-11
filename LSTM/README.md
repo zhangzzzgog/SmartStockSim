@@ -26,6 +26,12 @@ python lstm.py
 ```
 LSTM model is saved in tensorflow format.
 
+If you want to train with the news informations included, running:
+```
+python parserlong.py
+```
+The evaluation of news will be saved in './attitude/'.
+
 Comments in parserlong.py provide all the args and details, check it to set a more flexible training strategy.
 
 ## About the Dataset
