@@ -6,3 +6,6 @@ sklearn
 keras
 datetime
 matplotlib
+http
+json
+re
